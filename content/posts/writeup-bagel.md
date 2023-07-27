@@ -1,7 +1,7 @@
 ---
 title: "Writeup Bagel"
 date: 2023-07-26T16:17:25+02:00
-draft: true
+draft: false
 cover: "img/banners/bagel.webp"
 ---
 
