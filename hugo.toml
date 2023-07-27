@@ -29,7 +29,7 @@ paginate = 5
 [languages]
   [languages.en]
     title = "roarofhackers"
-    subtitle = "A simple theme for Hugo"
+    subtitle = "A cybersecurity blog"
     keywords = ""
     copyright = "Alex Rodriguez"
     menuMore = "Content"
