@@ -341,7 +341,7 @@ print(flag[idx:fin])
 ```
 And that's it, this will produce a beautiful output containing just our flag
 
-`picoCTF{I_l05t_4ll_my_m0n3y_c7cb6cae}``
+`picoCTF{I_l05t_4ll_my_m0n3y_c7cb6cae}`
 
 ### Conclusion
 
