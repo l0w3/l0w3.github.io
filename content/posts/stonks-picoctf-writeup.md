@@ -1,7 +1,7 @@
 ---
 title: "Stonks Picoctf Writeup"
 date: 2023-08-03T23:20:55+02:00
-draft: true
+author: l0w3
 ---
 
 ## Stonks PicoCTF
