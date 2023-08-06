@@ -1,7 +1,7 @@
 ---
 title: "Cache Me Outside Picoctf Writeup"
 date: 2023-08-06T18:26:17+02:00
-draft: true
+author: l0w3
 ---
 
 ## Cache Me Outside PicoCTF
