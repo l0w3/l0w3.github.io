@@ -170,3 +170,7 @@ Now we have on our machine the base64 string that will retrive our flag. We just
 - `a`
 - `2`
 - `0`
+
+### An actual WriteUp
+
+So, basically the error is to not return when the ZIP provied is not a valid base64 string. This, combined to the fact that we can overwrite the destination file when uploading by simply adding the `../../tmp` on the name when uploading a single image. When the execution continues, it retrieves the file on `tmp` and decompress it, efectively getting to `/flag`. Then, when we download it, it will download the content of `/flag` instead.   
