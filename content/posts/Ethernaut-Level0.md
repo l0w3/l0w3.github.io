@@ -30,17 +30,28 @@ With those pre-requisites met, let's dive into solving this level. It is quite s
 ![](/img/ethernautlevel0/7.png)
 
 From here, things can be a little bit trickier. We have to find where the password is being stored. As explained by the initial instructions, the ABI (Application Binary Interface) can be queried to get information about the public methods of the contract. The following command can be used to get all those methods:
+
 ![](/img/ethernautlevel0/8.png)
+
 We can see that there is a function called `password` so let's execute it and see what we get.
+
 ![](/img/ethernautlevel0/9.png)
+
 Bingo!! Let's authenticate now
+
 ![](/img/ethernautlevel0/10.png)
+
 Once executed, it asks for a transaction confirmation. Let's confirm it
 ![](/img/ethernautlevel0/11.png)
-Sweet. Now what? Well, from the step where we got the password we can see that we are missing one function to execute: `getCleared()`.  Let's execute it then
+
+Sweet. Now what? Well, from the step where we got the password we can see that we are missing one function to execute: `getCleared()`.  Let's execute it then.
+
 ![](/img/ethernautlevel0/12.png)
 
+
 Awesome, so it looks like we have solved the level. Let's submit the instance.
+
 ![](/img/ethernautlevel0/13.png)
+
 Yayyy, the level got solved!!!
 
