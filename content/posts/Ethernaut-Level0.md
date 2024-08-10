@@ -16,12 +16,19 @@ This level is an introduction to make sure we have all the necessary to start ou
 With those pre-requisites met, let's dive into solving this level. It is quite straight forward and we just have to follow along what the instructions said.
 
 ![](/img/ethernautlevel0/1.png)
+
 ![](/img/ethernautlevel0/2.png)
+
 ![](/img/ethernautlevel0/3.png)
+
 ![](/img/ethernautlevel0/4.png)
+
 ![](/img/ethernautlevel0/5.png)
+
 ![](/img/ethernautlevel0/6.png)
+
 ![](/img/ethernautlevel0/7.png)
+
 From here, things can be a little bit trickier. We have to find where the password is being stored. As explained by the initial instructions, the ABI (Application Binary Interface) can be queried to get information about the public methods of the contract. The following command can be used to get all those methods:
 ![](/img/ethernautlevel0/8.png)
 We can see that there is a function called `password` so let's execute it and see what we get.
