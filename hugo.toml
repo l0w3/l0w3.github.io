@@ -1,7 +1,7 @@
 baseURL = '/'
 languageCode = 'en-us'
 title = 'roarofhackers'
-theme = "hello-friend"
+theme = "hellofriend"
 
 paginate = 5
 [params]
