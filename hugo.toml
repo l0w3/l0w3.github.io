@@ -58,16 +58,13 @@ paginate = 5
         identifier = "about"
         name = "About"
         url = "/about/"
+
       [[languages.en.menu.main]]
-	identifier = "cv"
-	name = "CV"
-	url = "/cv"
-      [[languages.en.menu.main]]
-	identifier = "blog"
-	name = "Blog"
+	identifier = "writeups"
+	name = "CTF Writeups"
 	url = "/posts/"
 
-       [[languages.en.menu.main]]
-        identifier = "Research"
-        name = "Research"
-        url = "/docs/"
+      [[languages.en.menu.main]]
+  identifier = "Portfolio"
+  name = "Portfolio"
+  url = "/docs/"
