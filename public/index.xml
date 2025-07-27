@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>l0w3</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on l0w3</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>info@l0w3.com (l0w3)</managingEditor>
+    <webMaster>info@l0w3.com (l0w3)</webMaster>
+    <copyright>© 2025 l0w3</copyright>
+    <lastBuildDate>Sat, 19 Jul 2025 18:42:17 +0200</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Writing Malware in Rust: EarlyBird APC Part I: Basics</title>
+      <link>http://localhost:1313/posts/eb_apc/</link>
+      <pubDate>Sat, 19 Jul 2025 18:42:17 +0200</pubDate>
+      <author>info@l0w3.com (l0w3)</author>
+      <guid>http://localhost:1313/posts/eb_apc/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>
