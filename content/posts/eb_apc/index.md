@@ -2,7 +2,7 @@
 date = '2025-07-19T18:42:17+02:00'
 draft = false
 title = 'Writing Malware in Rust: EarlyBird APC Part I: Basics'
-tags= malware,rust
+tags= ['malware','rust']
 +++
 
 # Introduction
