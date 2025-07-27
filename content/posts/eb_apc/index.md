@@ -445,4 +445,20 @@ fn main() {
 }
 ```
 
-The first part is to 
+## Testing
+
+Wonderful!! With that in place, we can execute it and see if it pops up our calculator.
+
+![Early Bird APC Injection](<eb_basic-1.png>)
+
+![Early Bird APC Injection - Calculator pop up](<eb_basic-2.png>)
+
+It works! Now we have a program that can load code into a remote threat and execute it through adding it to the APC Queue. However, this is far from stealthy. A quick check on VirusTotal shows that this executable is detected by many security solutions:
+
+![Detected by manny solutions](<eb_basic-virustotal.png>)
+
+# Conclusion
+
+In this article, we learned how to perform EarlyBird APC Injection. However, we also saw that it would be detected by many security solutions. In Red Team Operations or realistic Threat simulations, it is at upmost important to be as stealthy as possible to grant success in Operations, or to have valuable insights to improve detection rules. In a following article, I will go through the process of making this technique stealthier, reducing the ammount of detections, but also creating our own lab so we are not uploading our stealthy malware samples to shared services.
+
+Stay tunned for more articles about malware development.
