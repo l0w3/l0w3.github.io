@@ -1,0 +1,237 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About - 0xl0w3">
+    <section class="about-page">
+        <h2 class="section-title">About Me</h2>
+
+        <div class="about-content">
+            <div class="profile-section">
+                <h3>Profile</h3>
+                <p>
+                    Cybersecurity professional specializing in vulnerability research, threat analysis,
+                    and defensive security practices. With a deep passion for understanding complex security
+                    challenges and developing innovative solutions.
+                </p>
+            </div>
+
+            <div class="expertise-section">
+                <h3>Areas of Expertise</h3>
+                <div class="expertise-grid">
+                    <div class="expertise-card">
+                        <h4>Security Research</h4>
+                        <p>Conducting in-depth vulnerability research and security analysis across various platforms and technologies.</p>
+                    </div>
+                    <div class="expertise-card">
+                        <h4>Reverse Engineering</h4>
+                        <p>Analyzing malware, binary exploitation, and understanding complex software systems at a low level.</p>
+                    </div>
+                    <div class="expertise-card">
+                        <h4>Threat Analysis</h4>
+                        <p>Identifying, analyzing, and mitigating emerging cybersecurity threats and attack vectors.</p>
+                    </div>
+                    <div class="expertise-card">
+                        <h4>Defensive Security</h4>
+                        <p>Implementing robust security controls, incident response, and security architecture design.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skills-section">
+                <h3>Technical Skills</h3>
+                <div class="skills-categories">
+                    <div class="skill-category">
+                        <h4>Security Tools</h4>
+                        <div class="skills-list">
+                            <span class="skill">Metasploit</span>
+                            <span class="skill">Burp Suite</span>
+                            <span class="skill">Wireshark</span>
+                            <span class="skill">IDA Pro</span>
+                            <span class="skill">Ghidra</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h4>Programming</h4>
+                        <div class="skills-list">
+                            <span class="skill">Python</span>
+                            <span class="skill">C/C++</span>
+                            <span class="skill">JavaScript</span>
+                            <span class="skill">Assembly</span>
+                            <span class="skill">Bash</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h4>Technologies</h4>
+                        <div class="skills-list">
+                            <span class="skill">Linux</span>
+                            <span class="skill">Docker</span>
+                            <span class="skill">Cloud Security</span>
+                            <span class="skill">Network Security</span>
+                            <span class="skill">Web Security</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-section">
+                <h3>Get In Touch</h3>
+                <p>
+                    Interested in collaboration, speaking engagements, or security consulting?
+                    Feel free to reach out through any of the following channels:
+                </p>
+                <div class="contact-links">
+                    <a href="#" class="contact-link">Email</a>
+                    <a href="#" class="contact-link">Twitter</a>
+                    <a href="#" class="contact-link">GitHub</a>
+                    <a href="#" class="contact-link">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+    .about-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 2rem 4rem;
+    }
+
+    .about-content {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .about-content h3 {
+        color: #ffc107;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid rgba(255, 193, 7, 0.3);
+        padding-bottom: 0.5rem;
+    }
+
+    .about-content p {
+        color: #b0b0b0;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    .profile-section,
+    .contact-section {
+        background: rgba(35, 35, 35, 0.4);
+        padding: 2rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 193, 7, 0.1);
+    }
+
+    .expertise-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .expertise-card {
+        background: rgba(35, 35, 35, 0.4);
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 193, 7, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .expertise-card:hover {
+        background: rgba(45, 45, 45, 0.6);
+        border-color: rgba(255, 193, 7, 0.3);
+        transform: translateY(-5px);
+    }
+
+    .expertise-card h4 {
+        color: #ffc107;
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .expertise-card p {
+        color: #b0b0b0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .skills-categories {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .skill-category {
+        background: rgba(35, 35, 35, 0.4);
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 193, 7, 0.1);
+    }
+
+    .skill-category h4 {
+        color: #ffc107;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .skills-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .skill {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .skill:hover {
+        background: rgba(255, 193, 7, 0.3);
+        transform: scale(1.05);
+    }
+
+    .contact-links {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+
+    .contact-link {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .contact-link:hover {
+        background: #ffc107;
+        color: #1a1a1a;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .expertise-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-links {
+            flex-direction: column;
+        }
+
+        .contact-link {
+            text-align: center;
+        }
+    }
+</style>
