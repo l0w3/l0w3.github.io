@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allCertifications = await getCollection('certifications', ({ data }) => {
+  return data.draft !== true;
+});
+const sortedCertifications = allCertifications.sort((a, b) =>
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+function formatDate(date: Date): string {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long'
+  });
+}
+---
+
+<BaseLayout title="Certifications - 0xl0w3">
+    <section class="latest-section">
+        <h2 class="section-title">Certifications</h2>
+        <p style="color: #b0b0b0; margin-bottom: 2rem;">Professional certifications and achievements in cybersecurity and related fields.</p>
+
+        <div class="certifications-grid">
+            {sortedCertifications.map(cert => (
+                <div class="certification-card">
+                    {cert.data.certImage && (
+                        <div class="cert-image-container">
+                            <img src={cert.data.certImage} alt={cert.data.title} class="cert-image" />
+                        </div>
+                    )}
+                    <div class="cert-header">
+                        <h3>{cert.data.title}</h3>
+                        <p class="cert-issuer">{cert.data.issuer}</p>
+                    </div>
+                    <p class="cert-date">{formatDate(cert.data.date)}</p>
+                    <p class="cert-description">{cert.data.description}</p>
+                    {cert.data.skills && cert.data.skills.length > 0 && (
+                        <div class="cert-skills">
+                            {cert.data.skills.map(skill => (
+                                <span class="skill-tag">{skill}</span>
+                            ))}
+                        </div>
+                    )}
+                    {cert.data.credentialUrl && (
+                        <a href={cert.data.credentialUrl} target="_blank" rel="noopener noreferrer" class="cert-link">
+                            View Credential →
+                        </a>
+                    )}
+                    {cert.data.certImage && !cert.data.credentialUrl && (
+                        <p class="cert-note">Certificate image available above</p>
+                    )}
+                    {cert.data.credentialId && (
+                        <p class="credential-id">ID: {cert.data.credentialId}</p>
+                    )}
+                </div>
+            ))}
+        </div>
+
+        {sortedCertifications.length === 0 && (
+            <p style="color: #888; text-align: center; padding: 2rem;">No certifications added yet.</p>
+        )}
+    </section>
+</BaseLayout>
+
+<style>
+    .certifications-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .certification-card {
+        background: rgba(35, 35, 35, 0.6);
+        border: 1px solid rgba(255, 193, 7, 0.1);
+        border-radius: 8px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .certification-card:hover {
+        background: rgba(45, 45, 45, 0.9);
+        border-color: rgba(255, 193, 7, 0.3);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(255, 193, 7, 0.1);
+    }
+
+    .cert-header h3 {
+        color: #ffc107;
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .cert-issuer {
+        color: #b0b0b0;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .cert-date {
+        color: #888;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .cert-description {
+        color: #b0b0b0;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+    }
+
+    .cert-skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .skill-tag {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .cert-link {
+        color: #ffc107;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+        display: inline-block;
+        margin-top: auto;
+    }
+
+    .cert-link:hover {
+        color: #ffed4e;
+    }
+
+    .credential-id {
+        color: #666;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+    }
+
+    .cert-image-container {
+        width: 100%;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 193, 7, 0.2);
+    }
+
+    .cert-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .certification-card:hover .cert-image {
+        transform: scale(1.02);
+    }
+
+    .cert-note {
+        color: #888;
+        font-size: 0.85rem;
+        font-style: italic;
+        margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .certifications-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

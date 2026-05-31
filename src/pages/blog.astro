@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+const sortedPosts = allPosts.sort((a, b) =>
+  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+function formatDate(date: Date): string {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+---
+
+<BaseLayout title="Blog - 0xl0w3">
+    <section class="latest-section">
+        <h2 class="section-title">Blog Posts</h2>
+        <p style="color: #b0b0b0; margin-bottom: 2rem;">Technical articles, tutorials, and insights on cybersecurity topics.</p>
+
+        <div class="posts-list">
+            {sortedPosts.map(post => (
+                <a href={`/blog/${post.slug}`} class="post-item">
+                    <div class="post-category">{post.data.category}</div>
+                    <h3>{post.data.title}</h3>
+                    <p class="post-description">{post.data.description}</p>
+                    <div class="post-meta">
+                        <span class="post-date">{formatDate(post.data.pubDate)}</span>
+                        <span>{post.data.readTime}</span>
+                        {post.data.tags && post.data.tags.length > 0 && (
+                            <div class="post-tags">
+                                {post.data.tags.map(tag => (
+                                    <span class="tag">{tag}</span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </a>
+            ))}
+        </div>
+
+        {sortedPosts.length === 0 && (
+            <p style="color: #888; text-align: center; padding: 2rem;">No blog posts added yet.</p>
+        )}
+    </section>
+</BaseLayout>
+
+<style>
+    .posts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .post-item {
+        background: rgba(35, 35, 35, 0.6);
+        border: 1px solid rgba(255, 193, 7, 0.1);
+        border-radius: 8px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+    }
+
+    .post-item:hover {
+        background: rgba(45, 45, 45, 0.9);
+        border-color: rgba(255, 193, 7, 0.3);
+        transform: translateX(10px);
+        box-shadow: 0 10px 40px rgba(255, 193, 7, 0.1);
+    }
+
+    .post-category {
+        display: inline-block;
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        padding: 0.35rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .post-item h3 {
+        color: #ffc107;
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .post-description {
+        color: #b0b0b0;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: center;
+        font-size: 0.85rem;
+        color: #888;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 193, 7, 0.1);
+    }
+
+    .post-date {
+        color: #ffc107;
+    }
+
+    .post-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tag {
+        background: rgba(255, 193, 7, 0.15);
+        color: #ffc107;
+        padding: 0.2rem 0.6rem;
+        border-radius: 3px;
+        font-size: 0.75rem;
+    }
+</style>

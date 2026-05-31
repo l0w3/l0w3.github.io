@@ -1,0 +1,356 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+const sortedPosts = allPosts.sort((a, b) =>
+  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+const allPapers = await getCollection('papers', ({ data }) => {
+  return data.draft !== true;
+});
+const sortedPapers = allPapers.sort((a, b) =>
+  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+).slice(0, 3);
+
+const allCertifications = await getCollection('certifications', ({ data }) => {
+  return data.draft !== true;
+});
+const sortedCertifications = allCertifications.sort((a, b) =>
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+).slice(0, 3);
+
+const blogPosts = sortedPosts.filter(post => post.data.type === 'blog').slice(0, 3);
+
+function formatDate(date: Date): string {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}
+---
+
+<BaseLayout title="0xl0w3 - Cybersecurity Portfolio">
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>0xl0w3</h1>
+        <p>Cybersecurity Professional | Researcher | Security Analyst</p>
+        <p class="hero-subtitle">Specializing in vulnerability research, threat analysis, and defensive security</p>
+        <div class="cta-buttons">
+            <a href="/about" class="btn btn-primary">About Me</a>
+            <a href="/papers" class="btn btn-secondary">View Research</a>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <a href="/papers" class="stat-card">
+                <div class="stat-number">{allPapers.length}</div>
+                <div class="stat-label">Research Papers</div>
+            </a>
+            <a href="/certifications" class="stat-card">
+                <div class="stat-number">{allCertifications.length}</div>
+                <div class="stat-label">Certifications</div>
+            </a>
+            <a href="/blog" class="stat-card">
+                <div class="stat-number">{allPosts.length}</div>
+                <div class="stat-label">Blog Posts</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Recent Posts -->
+    {blogPosts.length > 0 && (
+        <section class="recent-posts-section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Posts</h2>
+                <a href="/blog" class="view-all">View All →</a>
+            </div>
+
+            <div class="recent-posts-grid">
+                {blogPosts.map(post => (
+                    <a href={`/blog/${post.slug}`} class="recent-post-card">
+                        <div class="post-category-badge">{post.data.category}</div>
+                        <h3>{post.data.title}</h3>
+                        <p>{post.data.description}</p>
+                        <div class="recent-post-meta">
+                            <span class="post-date">{formatDate(post.data.pubDate)}</span>
+                            <span>{post.data.readTime}</span>
+                        </div>
+                    </a>
+                ))}
+            </div>
+        </section>
+    )}
+
+    <!-- Latest Research Papers -->
+    {sortedPapers.length > 0 && (
+        <section class="research-section" id="papers">
+            <div class="section-header">
+                <h2 class="section-title">Latest Research Papers</h2>
+                <a href="/papers" class="view-all">View All →</a>
+            </div>
+
+            <div class="posts-list">
+                {sortedPapers.map(paper => (
+                    <a href="/papers" class="post-item clickable-card">
+                        <h4>{paper.data.title}</h4>
+                        <p class="paper-authors-home">{paper.data.authors.join(', ')}</p>
+                        <p>{paper.data.description}</p>
+                        <div class="post-item-meta">
+                            <span>{formatDate(paper.data.pubDate)}</span>
+                            <span>{paper.data.readTime}</span>
+                            <span class="category">{paper.data.category}</span>
+                        </div>
+                    </a>
+                ))}
+            </div>
+        </section>
+    )}
+
+    <!-- Certifications Preview -->
+    {sortedCertifications.length > 0 && (
+        <section class="certifications-section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Certifications</h2>
+                <a href="/certifications" class="view-all">View All →</a>
+            </div>
+
+            <div class="certs-grid">
+                {sortedCertifications.map(cert => (
+                    <a href="/certifications" class="cert-card-home">
+                        <h4>{cert.data.title}</h4>
+                        <p class="cert-issuer-home">{cert.data.issuer}</p>
+                        <p class="cert-date-home">{formatDate(cert.data.date)}</p>
+                    </a>
+                ))}
+            </div>
+        </section>
+    )}
+
+</BaseLayout>
+
+<style>
+    .hero-subtitle {
+        font-size: 1rem;
+        color: #888;
+        margin-top: 0.5rem;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: #ffc107;
+        border: 2px solid #ffc107;
+    }
+
+    .btn-secondary:hover {
+        background: #ffc107;
+        color: #1a1a1a;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2);
+    }
+
+    .stats-section {
+        max-width: 1200px;
+        margin: 2rem auto 4rem;
+        padding: 0 2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+    }
+
+    .stat-card {
+        background: rgba(35, 35, 35, 0.6);
+        border: 1px solid rgba(255, 193, 7, 0.2);
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+    }
+
+    .stat-card:hover {
+        background: rgba(45, 45, 45, 0.8);
+        border-color: rgba(255, 193, 7, 0.4);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(255, 193, 7, 0.15);
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        color: #ffc107;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #b0b0b0;
+        font-size: 1rem;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .view-all {
+        color: #ffc107;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+        font-size: 1.1rem;
+    }
+
+    .view-all:hover {
+        color: #ffed4e;
+    }
+
+    .paper-authors-home {
+        color: #888;
+        font-style: italic;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .certifications-section {
+        max-width: 1200px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+    }
+
+    .certs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .cert-card-home {
+        background: rgba(35, 35, 35, 0.6);
+        border: 1px solid rgba(255, 193, 7, 0.1);
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+    }
+
+    .cert-card-home:hover {
+        background: rgba(45, 45, 45, 0.8);
+        border-color: rgba(255, 193, 7, 0.3);
+        transform: translateY(-5px);
+    }
+
+    .cert-card-home h4 {
+        color: #ffc107;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .cert-issuer-home {
+        color: #b0b0b0;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .cert-date-home {
+        color: #888;
+        font-size: 0.85rem;
+    }
+
+    .recent-posts-section {
+        max-width: 1200px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+    }
+
+    .recent-posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .recent-post-card {
+        background: rgba(35, 35, 35, 0.6);
+        border: 1px solid rgba(255, 193, 7, 0.1);
+        border-radius: 8px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .recent-post-card:hover {
+        background: rgba(45, 45, 45, 0.9);
+        border-color: rgba(255, 193, 7, 0.3);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(255, 193, 7, 0.1);
+    }
+
+    .post-category-badge {
+        display: inline-block;
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        padding: 0.35rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        width: fit-content;
+    }
+
+    .recent-post-card h3 {
+        color: #ffc107;
+        font-size: 1.3rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .recent-post-card p {
+        color: #b0b0b0;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+        line-height: 1.6;
+    }
+
+    .recent-post-meta {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.85rem;
+        color: #888;
+        border-top: 1px solid rgba(255, 193, 7, 0.1);
+        padding-top: 1rem;
+    }
+
+    .recent-post-meta .post-date {
+        color: #ffc107;
+    }
+
+    @media (max-width: 768px) {
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
