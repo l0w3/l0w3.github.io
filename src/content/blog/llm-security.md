@@ -2,7 +2,7 @@
 title: "LLM Security: A reflection"
 description: "Reflecion about LLM Security and the many ways they can be exploited"
 pubDate: 2026-01-25
-category: "Reflection"
+category: "LLMSecurity"
 readTime: "12 min read"
 type: blog
 tags: ["LLM", "AI"]
