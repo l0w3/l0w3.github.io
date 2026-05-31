@@ -1,4 +1,4 @@
---
+---
 title: "Certified Digital Forensic Examiner"
 issuer: "Mile2"
 date: 2026-05-13

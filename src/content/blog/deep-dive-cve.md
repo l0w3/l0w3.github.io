@@ -39,7 +39,7 @@ int main()
 
 This simple code in C, when transformed into assembly by the compiler is something like this:
 
-```assembly
+```asm
 	.file	"stack.c"
 	.text
 	.globl	main
@@ -107,7 +107,7 @@ int main()
 
 Again, compiled into assembly, gets transformed into:
 
-```assembly
+```asm
 	.file	"data.c"
 	.text
 	.globl	myglobalstring
@@ -186,7 +186,7 @@ int main()
 
 Note that now, the variable `myglobalstring` did not receive any value. Let’s see how it looks on the assembly code:
 
-```assembly
+```asm
 	.file	"bss.c"
 	.text
 	.globl	myglobalstring
