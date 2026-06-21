@@ -4,6 +4,7 @@ description: "Loading Code Into IIS Processes"
 pubDate: 2026-06-20
 category: "Malware Development"
 type: blog
+readTime: "20 min read"
 tags: ["Malware Development", "Evasion", "Monitoring"]
 author: "0xl0w3"
 ---
