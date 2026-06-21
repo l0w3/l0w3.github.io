@@ -1,5 +1,5 @@
 ---
-title: "EDR Evasion: From External to DA without the EDR Noticing Anything - Part 1"
+title: "Evaluating EDR Visibility During an IIS-to-DA Attack Chain - Part 1"
 description: "Loading Code Into IIS Processes"
 pubDate: 2026-06-20
 category: "Malware Development"
@@ -327,4 +327,4 @@ On the next part I will be showing how to code a DLL that does much more than a 
 Although this minimal development works, many things can still be changed to make it better and more reliable. Here below are some improvements that I might be applying in the future:
 
 - Resetting the DLL path after successful execution of the DLL
-- Being able to retrieve DLLs from the internet and execute them In-Memory
+- Loading DLLs directly from remote sources and executing them from memory
