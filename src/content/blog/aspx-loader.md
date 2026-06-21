@@ -11,7 +11,7 @@ author: "0xl0w3"
 
 # Introduction
 
-Many years ago I discovered the amazing Active Directory vulnerable lab "GOAD", a lab that includes a whole AD environment with misconfigurations and small automations that allow Security Researchers and Penetration Testers to test new techniques and experiment with a contorlled environment. Of course it is not meant to be secure, but it is enough to experiment and test.
+Many years ago I discovered the amazing Active Directory vulnerable lab "GOAD", a lab that includes a whole AD environment with misconfigurations and small automations that allow Security Researchers and Penetration Testers to test new techniques and experiment in a controlled environment. Of course it is not meant to be secure, but it is enough to experiment and test.
 
 I decided that in order to test the real capabilities of modern EDRs, as well as practice my malware development skills and OpSec, it would be a great project to complete one of the compromise chains of the GOAD lab with an EDR installed, trying to avoid any detection from it. The compromise chain I will be following looks like this:
 
@@ -21,7 +21,7 @@ flowchart LR
 
 ```
 
-In this article I will be convering the first part of the graph, where I go through the development of a custom `ASPX DLL loader` that will load a DLL passed as parameter. For now, the loading will be done with the `LoadLibrary` method. If later on this development does not work, it will be changed to meet the objectives of achieving DA privileges without getting detections on Elastic.
+In this article I will be covering the first part of the graph, where I go through the development of a custom `ASPX DLL loader` that will load a DLL passed as parameter. For now, the loading will be done with the `LoadLibrary` method. If later on this development does not work, it will be changed to meet the objectives of achieving DA privileges without getting detections on Elastic.
 
 # ASPX Loader
 
@@ -49,7 +49,7 @@ private static extern IntPtr LoadLibrary(string lpFileName);
 private static extern bool SetDllDirectory(string lpPathName);
 ```
 
-In this case, we are defining the LoadLibrary function in `ANSI` mode (UTF-16). This is equivalent to `LoadLibraryA`.
+In this case, we are defining the `LoadLibrary` function in ANSI mode. This is equivalent to `LoadLibraryA`, which expects an ANSI (8-bit character) string. The UTF-16 equivalent would be `LoadLibraryW`.
 
 We are also defining the function SetDllDirectory, which will allow us to load DLL files from other paths different to the used by the IIS server.
 
@@ -95,7 +95,7 @@ protected void btnLoad_Click(object sender, EventArgs e)
     }
 ```
 
-This is a super simple loader, it just gets the DLL path passed through a text box on the Front-End and looks for it on the system. If it exists, it will set the Directory of DLLs of the process to be the given directory and it will later use `LoadLibrary` to load it onto the running process. If our DLL has code that runs directly after the DLL is loaded, then the code will be directly executed afther the `LoadLibrary` function call.
+This is a super simple loader, it just gets the DLL path passed through a text box on the Front-End and looks for it on the system. If it exists, it will set the Directory of DLLs of the process to be the given directory and it will later use `LoadLibrary` to load it onto the running process. If our DLL has code that runs directly after the DLL is loaded, then the code will be directly executed after the `LoadLibrary` function call.
 
 ## Front-End
 
@@ -190,13 +190,13 @@ protected void btnLoad_Click(object sender, EventArgs e)
 ```
 # DLL
 
-With the ASPX Loader created, now everything that is left to do is to have a DLL to load. For now I will just create a DLL that will make a HTTP request to a controlled server. On further parts of this series, I will be reimplementing functions as well as further techniques to aquire all the capabilities that might be needed to get to the end goal.
+With the ASPX Loader created, now everything that is left to do is to have a DLL to load. For now I will just create a DLL that will make a HTTP request to a controlled server. In further parts of this series, I will be reimplementing functions as well as additional techniques to acquire all the capabilities that might be needed to reach the end goal.
 
 Without further due, let's dive right in
 
 ## HTTP Request
 
-The first step is to create a function that will make the HTTP requests. This will allow our loaded code to communicate to our server, pretty much like a C2. I would not name this a C2 just yet, as it is really too basic, but keep in mind that if we further develop both endpoints (the "agent" and the "receiver" ends) we might have something that could reassemble a real C2.
+The first step is to create a function that will make the HTTP requests. This will allow our loaded code to communicate to our server, pretty much like a C2. I would not name this a C2 just yet, as it is really too basic, but keep in mind that if we further develop both endpoints (the "agent" and the "receiver" ends), we might have something that could resemble a real C2.
 
 ```c
 #define _CRT_SECURE_NO_WARNINGS
@@ -256,11 +256,11 @@ void TestConnection(void)
 }
 ```
 
-Again, this is just to test that everything works. Following articles will focus specifically only on the developmentof a DLL with much more functionality as well as evasion techniques.
+Again, this is just to test that everything works. Following articles will focus specifically on the development of a DLL with much more functionality as well as evasion techniques.
 
 ## DLL Main File
 
-A DLL must contain a dllmain.c file, which will be the entry point for the tll and it is the file that defines what will be done after loading it. Here we will be specifying that the DLL must call `TestConnection` on load.
+A DLL must contain a `dllmain.c` file, which will be the entry point for the DLL, and it is the file that defines what will be done after loading it.. Here we will be specifying that the DLL must call `TestConnection` on load.
 
 ```c
 #include <Windows.h>
@@ -288,7 +288,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
 # Putting it All Together
 
-After coding everything, I compiled the DLL and uploaded everything through the Unrestricted File Upload that the server `X.X.X.22` has. After that, I executed the DLL throught the ASPX loader and started an http listener on my host.
+After coding everything, I compiled the DLL and uploaded everything through the Unrestricted File Upload that the server `X.X.X.22` has. After that, I executed the DLL through the ASPX loader and started an HTTP listener on my host.
 
 ![Successful connection from the DLL](/images/aspx-loader/aspxloader-test.png)
 
@@ -298,7 +298,7 @@ After a successful execution I checked the alerts generated on the timeframe whe
 
 ![No alerts generated by Elastic](/images/aspx-loader/elastic-noalerts.png)
 
-We observe that no alert was generated. That's exactly what we were looking for, and that tells us something very important: Elastic is not monitoring the Libraries that get loaded onto the IIS Worker, which means that for now we are on the right track.
+We observe that no alert was generated. That's exactly what we were looking for, and that tells us something very important: in this test, Elastic did not generate an alert for the DLL being loaded into the IIS Worker process, which means that for now we are on the right track.
 
 I also looked at the telemetry generated by elastic and we do get events for the network connection as well as for the DLL load action.
 
@@ -310,6 +310,6 @@ For defenders it might be a good idea to create custom rules that detect this ty
 
 # Closing
 
-On this article we saw how we could code a simple ASPX loader of DLLs as well as a test DLL to test if the loader works correctly. Ee also could see that Elastic did not generate any alert for the DLL load event and the internet connection, meaning that so long we execute everything within the w3wp.exe process without spawning child processes, it is very likely that Elastic will not notice anything. However, this project is currently going on and I am developping it and writing it on the go, meaning that there can be things that will be detected by Elastic on further steps and might force us to change the plan.
+In this article we saw how we could code a simple ASPX loader for DLLs as well as a test DLL to verify that the loader works correctly. We also could see that Elastic did not generate any alert for the DLL load event or the network connection, meaning that, as long as we execute everything within the w3wp.exe process without spawning child processes, it is possible that this specific activity may not generate alerts in the tested Elastic configuration. However, this project is currently ongoing and I am developing it and writing it as I go, meaning that there can be things that will be detected by Elastic on further steps and might force us to change the plan.
 
-On the next part I will be showing how to code a DLL that does much more than a simple `HelloWorld` request. Stay tunned!
+On the next part I will be showing how to code a DLL that does much more than a simple `HelloWorld` request. Stay tuned!
