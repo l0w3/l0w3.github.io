@@ -150,9 +150,9 @@ binwalk -Me camera-firmware1.img
 
 ![Files on Firmware (2)](/images/hardware-hacking-gone-wrong/image5.png)
 
-Great!! So now that I finally got to extract the firmware, I wanted to try to find some basic data, such as the SSID or the Password of my WiFi network, as well as other interesting data, however, I did not find any file that contained this information. I might need to reverse engineer the program on the firmware itself (located on /bin/main), but I will cover that on another article, perhaps one that is a bit more optimistic ;).
+Great!! So now that I finally got to extract the firmware, I wanted to try to find some basic data, such as the SSID or the Password of my WiFi network, as well as other interesting data, however, I did not find any file that contained this information. I might need to reverse engineer the main program (located on `/bin/main`), but I will cover that on another article, perhaps one that is a bit more optimistic ;).
 
-I observed as well that there is no actual "filesystem", and that the strings on the raw img are fairly reduced.
+I observed as well that the strings on the raw img are fairly reduced.
 
 ```shell
 0xl0w3@fedora:~/Documents/hh$ strings camera-firmware1.img  -n 10 | wc -l
@@ -160,7 +160,7 @@ I observed as well that there is no actual "filesystem", and that the strings on
 0xl0w3@fedora:~/Documents/hh$
 ```
 
-I do not know why, but that really seems like something is missing. Perhaps there is another Flash memory on the chip that I did not see, or maybe one of the chips it uses has an integrated flash where the actual filesystem is saved. In order to confirm that I wanted to connect to the UART interface that I observed on the board and check if I could manage to get a shell, but for that I needed to soder back the SPI Flash onto the board.
+I do not know why, but that really seems like something is missing. Perhaps there is another Flash memory on the board that I did not see, or maybe one of the chips it uses has an integrated flash where more data is saved. In order to confirm that I wanted to connect to the UART interface that I observed on the board and check if I could manage to get a shell, but for that I needed to soder back the SPI Flash onto the board.
 
 # Sodering SPI Flash Back
 
