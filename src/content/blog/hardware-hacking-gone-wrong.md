@@ -208,6 +208,7 @@ Other than that, everything appears to be working, no other damage aside from th
 - Clean the tips of the sodering iron regularly and re-tin them before working and leaving it off, that way the heat distributes far faster than if not done.
 - Firmwares come in many sizes and shapes, and it is bold to expect that all will have a great filesystem with all the files available to be read. 
 - Breaking (cheap) things is the best way to learn, keep trying until getting it done, the worst that can happen is that it will (still) not work.
+- Before de-soldering components boldly, research and find out if there are debug ports that could be used.
 
 # Conclusions
 
