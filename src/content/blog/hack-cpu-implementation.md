@@ -13,27 +13,27 @@ author: "0xl0w3"
 
 # Introduction
 
-Have you ever thought about how the hell a computer actually works? I know, it sounds like one of those questions that everyone has asked themselves at least once. I certainly did. At university I took several courses that were supposed to explain exactly that. We learned about logic gates, synchronous and asynchronous circuits, Flip-Flops, Registers, ALUs... Basically, all the building blocks that make up a CPU. The problem was that I never really understood how all those pieces came together to build an actual computer.
+Have you ever thought about how the hell a computer actually works? I know, it sounds like one of those questions that everyone has asked themselves at least once. I certainly did. At university, I took several courses that were supposed to explain exactly that. We learned about logic gates, synchronous and asynchronous circuits, flip-flops, registers, ALUs... basically, all the building blocks that make up a CPU. The problem was that I never really understood how all those pieces came together to build an actual computer.
 
 The same thing happened with assembler theory. We learned how programming languages are designed, how lexers and parsers work, how grammars are defined... but I never had the chance to actually build one from scratch. I understood the theory, but I was missing the hands-on part that makes everything finally click.
 
 For that reason, I started looking for projects that would let me explore the whole stack, from the hardware all the way up to the software. That's when I found Nand2Tetris, a project that takes you from a single NAND gate to a complete computer capable of running Tetris. I completed the course a couple of years ago using the simulator provided by the project, but now that I have an FPGA where I can actually implement the CPU, I thought it would be a good excuse to go through everything again, this time on real hardware.
 
-The goal of this project is not just to build a CPU. I also want to understand everything that sits on top of it: how an instruction set is designed, how an assembler and an assembler work, how memory is managed, and eventually how operating systems and kernels interact with the hardware. Whether I will end up implementing all of that... I honestly don't know. What I do know is that every project has to start somewhere, and this seemed like a pretty good place to begin.
+The goal of this project is not just to build a CPU. I also want to understand everything that sits on top of it: how an instruction set is designed, how compilers and assembler work, how memory is managed, and eventually how operating systems and kernels interact with the hardware. Whether I will end up implementing all of that... I honestly don't know. What I do know is that every project has to start somewhere, and this seemed like a pretty good place to begin.
 
 ```mermaid
 flowchart LR
     NAND["NAND Gate"]
     CPU["CPU"]
     ASM["Assembly"]
-    COMP["assembler"]
+    ASSEMBLER["Assembler"]
     LANG["Programming Language"]
     KERNEL["Kernel / OS"]
 
     NAND --> CPU
     CPU --> ASM
-    ASM --> COMP
-    COMP --> LANG
+    ASM --> ASSEMBLER
+    ASSEMBLER --> LANG
     LANG --> KERNEL
 ```
 
@@ -66,7 +66,7 @@ The following sections cover the implementation of each of these components and 
 
 The ALU from the Hack processor receives two 16-bit input words together with six 1-bit control signals, and produces one 16-bit output word along with two status flags. At first glance, these six control signals may seem a bit confusing, but they simply define how the two input values should be processed before the final operation is performed.
 
-The meaning of each control signal is the following:
+The meaning of each control signal is as follows:
 
 - `zx`: Replaces the `x` input with `0`.
 - `nx`: Negates the `x` input.
@@ -101,7 +101,7 @@ flowchart LR
     OUT --> NG["ng"]
 ```
 
-The hardware description in Verilog is the following:
+The hardware description in Verilog is as follows:
 
 ```verilog
 `timescale 1ns / 1ps
@@ -175,7 +175,7 @@ Apart from the resulting 16-bit value, the ALU also generates two status flags. 
 
 Now that the ALU is implemented, we have all the pieces required to build the CPU itself. In this part, the Program Counter and the controller are implemented and connected to the ALU we developed previously. This is arguably the most important part of the project, as this is where everything starts coming together.
 
-Unlike the ALU or the Program Counter, the controller is not implemented as a separate hardware module. Instead, it is simply the collection of combinational logic responsible for decoding the current instruction and generating all the control signals required by the rest of the CPU. Signals such as `load_A`, `load_D`, `writeMemory` and `pc_load` are all part of what makes up the controller.
+Unlike the ALU or the Program Counter, the controller is not implemented as a separate hardware module. Instead, it is simply the collection of combinational logic responsible for decoding the current instruction and generating all the control signals required by the rest of the CPU. Signals such as `load_A`, `load_D`, `writeMemory`, and `pc_load` are all part of what makes up the controller.
 
 At a high level, the CPU executes instructions following the data flow shown below.
 
@@ -200,7 +200,7 @@ flowchart LR
     PC --> ROM
 ```
 
-The hardware description in Verilog is the following:
+The hardware description in Verilog is as follows:
 
 ```verilog
 `timescale 1ns / 1ps
@@ -301,7 +301,7 @@ The CPU starts by decoding the instruction that has been fetched from memory. Si
 
 Once the instruction has been decoded, the controller extracts all the required control signals. These determine which operands are sent to the ALU, which operation the ALU performs, which registers should be updated and whether the Program Counter should continue to the next instruction or perform a jump.
 
-Finally, the outputs generated by the ALU are routed either back into the registers, written into memory or used to evaluate the jump conditions. At this point, the CPU is capable of fetching instructions, executing them and updating its internal state every clock cycle.
+Finally, the outputs generated by the ALU are routed either back into the registers, written into memory, or used to evaluate the jump conditions. At this point, the CPU is capable of fetching instructions, executing them, and updating its internal state every clock cycle.
 
 With the CPU fully implemented, the next step is figuring out how to actually program it. While we could manually write binary instructions, that would quickly become impractical, so in the next section we'll start designing a simple assembly language together with an assembler capable of translating it into machine code.
 
@@ -351,11 +351,11 @@ the assembler knows exactly which binary instruction corresponds to that operati
 
 Of course, this raises another question... How do we build an assembler capable of doing that? Well, that's exactly what we'll implement in the next section, where we'll build an assembler for a small assembly language called `hasm`.
 
-## Custom assembler: hasm to hack
+## Custom Assembler: `hasm` to Hack
 
-an assembler is a piece of software that translates source code into a format that the computer can understand, which, in this case, is binary machine code. For this project, I created a small assembler capable of translating a basic instruction set into the binary instructions expected by the CPU.
+An assembler is a piece of software that translates source code into a format that the computer can understand, which, in this case, is binary machine code. For this project, I created a small assembler capable of translating a basic instruction set into the binary instructions expected by the CPU.
 
-The opcodes that I implemented for now are the following:
+The opcodes I have implemented so far are as follows:
 
 ```text
 LOAD
@@ -728,19 +728,19 @@ if __name__ == "__main__":
             f.write(line + "\n")
 ```
 
-The lexer is relatively simple. It first separates each line using whitespace and then classifies every element as a register, a word or a number. For example, the instruction `ADD A D` would be split into three tokens: `ADD`, `A` and `D`, which would then be classified as `WORD`, `REG` and `REG`.
+The lexer is relatively simple. It first separates each line using whitespace and then classifies every element as a register, a word, or a number. For example, the instruction `ADD A D` would be split into three tokens: `ADD`, `A`, and `D`, which would then be classified as `WORD`, `REG`, and `REG`.
 
 The parser takes these tokens and converts them into Python objects. Each parsed instruction contains an opcode together with a list of operands, which can either be registers or immediate values. The parser also verifies that each opcode receives the correct number and type of operands. For example, `LOAD` expects a number, while the jump instructions expect a register.
 
 The encoder is responsible for generating the final binary representation. Each opcode has its own encoding function, which constructs the instruction based on the format used by the Hack CPU. The `route_encode` function checks the opcode and sends the instruction to the corresponding encoder.
 
-Finally, the main part of the program opens the source file, compiles every line independently and writes the resulting machine code into a new `.hack` file. With this, we can write programs using our small `hasm` instruction set instead of manually writing every instruction in binary.
+Finally, the main part of the program opens the source file, compiles every line independently, and writes the resulting machine code into a new `.hack` file. With this, we can write programs using our small `hasm` instruction set instead of manually writing every instruction in binary.
 
 So yeah, we now have both sides of the system: a CPU capable of executing machine instructions and an assembler capable of generating them. Sure, the language is still extremely limited, and there are many things that could be improved, but it is already enough to start writing and running small programs on the CPU.
 
 ## The CPU in Action
 
-Now that everything has been implemented, it's finally time for some actual testing. For this project I used a Basys3 FPGA, as it is a relatively affordable development board with plenty of I/O, excellent documentation, and full support from the Vivado toolchain. Below are the program I used together with a few screenshots of the CPU running on the FPGA.
+Now that everything has been implemented, it's finally time for some actual testing. For this project, I used a Basys3 FPGA, as it is a relatively affordable development board with plenty of I/O, excellent documentation, and full support from the Vivado toolchain. Below is the program I used, together with a screenshot of the CPU running on the FPGA.
 
 To start, I wrote the following program using the assembly language we created earlier, which I named `hasm`:
 
@@ -772,7 +772,7 @@ After passing it through the assembler, the following machine code is generated:
 
 This machine code is then loaded into the ROM before synthesizing and programming the FPGA. When the CPU starts executing, it fetches each instruction from ROM, performs the corresponding operation and updates its internal state exactly as we designed throughout this article.
 
-To visualize the execution, I created the following top-level module that simply connects all the different components together: the CPU, the ROM, the RAM and a set of LEDs. The LEDs are connected to the `D` register, allowing us to directly observe its contents while the program is running.
+To visualize the execution, I created the following top-level module that simply connects all the different components together: the CPU, the ROM, the RAM, and a set of LEDs. The LEDs are connected to the `D` register, allowing us to directly observe its contents while the program is running.
 
 ```verilog
 `timescale 1ns / 1ps
@@ -822,12 +822,13 @@ endmodule
 ```
 ![FPGA with LEDs](/images/hack-cpu-implementation/image.png)
 
-After synthesizing the design and programming the FPGA, I could finally watch the CPU execute the program on real hardware. Seeing the LEDs change as the instructions were executed was probably the most satisfying part of the whole project. After spending so much time implementing the ALU, the controller, the assembler and the instruction set, it was pretty cool to see everything finally come together and run on a physical board.
+After synthesizing the design and programming the FPGA, I could finally watch the CPU execute the program on real hardware. Seeing the LEDs change as the instructions were executed was probably the most satisfying part of the whole project. After spending so much time implementing the ALU, the controller, the assembler, and the instruction set, it was pretty cool to see everything finally come together and run on a physical board.
 
 # Conclusion
 
-In this article we've seen how a CPU is built, how it executes instructions, and how an assembler translates human-readable assembly into machine code. We've also seen that hardware and software are tightly connected: the instruction set provided by the CPU directly determines what can and cannot be expressed by the programming language.
+In this article, we've seen how a CPU is built, how it executes instructions, and how an assembler translates human-readable assembly into machine code. We've also seen that hardware and software are tightly connected: the instruction set provided by the CPU directly determines what can and cannot be expressed by the programming language.
 
 There is still a lot left to do. The instruction set is very limited, the assembler only supports a handful of instructions, and there is no higher-level language yet. In future articles, I might explore what it takes to build one and how seemingly simple statements, such as declaring an integer or evaluating an expression, end up being translated into many small instructions like `LOAD`, `MOVE` and `ADD`.
 
 So yeah, this is only the beginning.
+
