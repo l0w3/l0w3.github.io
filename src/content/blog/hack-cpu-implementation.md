@@ -19,23 +19,7 @@ The same thing happened with assembler theory. We learned how programming langua
 
 For that reason, I started looking for projects that would let me explore the whole stack, from the hardware all the way up to the software. That's when I found Nand2Tetris, a project that takes you from a single NAND gate to a complete computer capable of running Tetris. I completed the course a couple of years ago using the simulator provided by the project, but now that I have an FPGA where I can actually implement the CPU, I thought it would be a good excuse to go through everything again, this time on real hardware.
 
-The goal of this project is not just to build a CPU. I also want to understand everything that sits on top of it: how an instruction set is designed, how compilers and assembler work, how memory is managed, and eventually how operating systems and kernels interact with the hardware. Whether I will end up implementing all of that... I honestly don't know. What I do know is that every project has to start somewhere, and this seemed like a pretty good place to begin.
-
-```mermaid
-flowchart LR
-    NAND["NAND Gate"]
-    CPU["CPU"]
-    ASM["Assembly"]
-    ASSEMBLER["Assembler"]
-    LANG["Programming Language"]
-    KERNEL["Kernel / OS"]
-
-    NAND --> CPU
-    CPU --> ASM
-    ASM --> ASSEMBLER
-    ASSEMBLER --> LANG
-    LANG --> KERNEL
-```
+The goal of this project is not just to build a CPU. I also want to understand everything that sits on top of it: how an instruction set is designed, how compilers and assemblers work, how memory is managed, and eventually how operating systems and kernels interact with the hardware. Whether I will end up implementing all of that... I honestly don't know. What I do know is that every project has to start somewhere, and this seemed like a pretty good place to begin.
 
 So yeah, enough talking. Let's start building a CPU.
 
@@ -43,7 +27,7 @@ So yeah, enough talking. Let's start building a CPU.
 
 The implementation proposed by Nand2Tetris starts by building every single component from nothing but NAND gates. While I think this is a great approach for understanding how digital logic works, I don't find it to be the most interesting one when targeting an FPGA. Tools like Vivado already provide many of these basic components, so implementing them again would mostly be reinventing the wheel.
 
-For that reason, I decided to take a slightly different approach. Instead of recreating every logic gate, I focused on implementing the interesting parts of the computer: the ALU, the Program Counter, and the Controller, while relying on the built-in arithmetic operators (`&`, `|`, `+`, `-`, `~`, etc.) and basic components such as registers that are already available in Vivado. The same applies to the ROM and RAM, which are also provided by the framework.
+For that reason, I decided to take a slightly different approach. Instead of recreating every logic gate, I focused on implementing the interesting parts of the computer: the ALU, the Program Counter, and the Controller, while relying on the built-in arithmetic operators (`&`, `|`, `+`, `-`, `~`, etc.) and basic components such as registers that are already available in Vivado. The ROM and RAM were implemented using arrays of registers connected to the CPU’s address, input, and output signals.
 
 With that being said, let's first take a look at what a CPU actually is and what components it needs to work. At a high level, a CPU (Central Processing Unit) is composed of three main components: an Arithmetic Logic Unit (ALU), a Program Counter (PC), and a Controller. The Program Counter keeps track of the next instruction that has to be executed, the ALU performs the operations requested by those instructions, and the Controller is responsible for coordinating everything, deciding what happens and when.
 
@@ -515,7 +499,7 @@ class Parser():
                 opcode=self.tokens[0][1],
                 operands=[
                     Immediate(
-                        value=self.tokens[1][1]
+                        value=int(self.tokens[1][1])
                     )
                 ]
             )
@@ -649,7 +633,7 @@ class Encoder():
         return binary
 
 
-    def encode_jumpl(self, comparator):
+    def encode_jumpb(self, comparator):
         binary = "111"
         if comparator == "A":
             binary += "0"
@@ -658,7 +642,7 @@ class Encoder():
         elif comparator == "D":
             binary += "0"
         else:
-            raise ValueError(f"Invalid JUMPL comparator: {comparator}")
+            raise ValueError(f"Invalid JUMPB comparator: {comparator}")
 
         if comparator == "D":
             binary += "001100"
@@ -670,7 +654,7 @@ class Encoder():
         return binary
 
 
-    def encode_jumpb(self, comparator):
+    def encode_jumpl(self, comparator):
         binary = "111"
         if comparator == "A":
             binary += "0"
@@ -679,7 +663,7 @@ class Encoder():
         elif comparator == "D":
             binary += "0"
         else:
-            raise ValueError(f"Invalid JUMPB comparator: {comparator}")
+            raise ValueError(f"Invalid JUMPL comparator: {comparator}")
 
         if comparator == "D":
             binary += "001100"
@@ -772,7 +756,7 @@ After passing it through the assembler, the following machine code is generated:
 
 This machine code is then loaded into the ROM before synthesizing and programming the FPGA. When the CPU starts executing, it fetches each instruction from ROM, performs the corresponding operation and updates its internal state exactly as we designed throughout this article.
 
-To visualize the execution, I created the following top-level module that simply connects all the different components together: the CPU, the ROM, the RAM, and a set of LEDs. The LEDs are connected to the `D` register, allowing us to directly observe its contents while the program is running.
+To visualize the execution, I created the following top-level module that simply connects all the different components together: the CPU, the ROM, the RAM, and a set of LEDs. The LEDs are connected to the `D` register, allowing us to directly observe the result of the computations.
 
 ```verilog
 `timescale 1ns / 1ps
@@ -822,7 +806,7 @@ endmodule
 ```
 ![FPGA with LEDs](/images/hack-cpu-implementation/image.png)
 
-After synthesizing the design and programming the FPGA, I could finally watch the CPU execute the program on real hardware. Seeing the LEDs change as the instructions were executed was probably the most satisfying part of the whole project. After spending so much time implementing the ALU, the controller, the assembler, and the instruction set, it was pretty cool to see everything finally come together and run on a physical board.
+After synthesizing the design and programming the FPGA, I could finally watch the CPU execute the program on real hardware. Seeing the LEDs light up with the result of the computations was really satisfying. After spending so much time implementing the ALU, the controller, the assembler, and the instruction set, it was pretty cool to see everything finally come together and run on a physical board.
 
 # Conclusion
 
